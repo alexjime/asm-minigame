@@ -13,7 +13,7 @@ choice DWORD ? ;player
 counter DWORD ? ;counter of win in a row
 ;
 outHandle HANDLE 0
-windowRect SMALL_RECT <0,0,50,50>
+windowRect SMALL_RECT <0,0,55,50>
 .code
 main PROC
 	;console size set
