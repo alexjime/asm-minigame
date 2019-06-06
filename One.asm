@@ -558,12 +558,12 @@ mov ebp,esp
 	mov ecx, LENGTHOF File_value_array ; 1000번 루프
 
 L1:  ; 루프 1 ; 파일에서 널값을 찾을 때 까지 반복
-    mov eax, [edx]
-    add ebx, TYPE File_value_array  
-    cmp eax, 0
-    je Find_Zero      ; 루프 탈출
-    add edx, TYPE File_value_array 
-    loop L1
+	mov eax, [edx]
+	add ebx, TYPE File_value_array  
+	cmp eax, 0
+	je Find_Zero      ; 루프 탈출
+	add edx, TYPE File_value_array 
+	loop L1
 
 Find_Zero:  
 	mov find_zero_offset, edx
@@ -585,28 +585,28 @@ mov ebp,esp
 	xor eax,eax
 
 L1:
-    xor edx,edx ;dl=0으로 초기화
-    cmp dl, [Space_Word + esi] ;al ;Space_Word에는 매치된 부분에만 "0이 아닌 값"이 저장되어있음
-    ;Tip: 문자값을 비교할때는 edx레지스터를 써야한다. 꼭! 꼭! eax는 정수값 비교할 때만 쓰는 레지스터입니다.
-    je L5
-    mov dl, [Space_Word + esi]
-    mov Match_Alpha, dl
-    mov edx, OFFSET Match_Alpha 
-    call WriteString ;매치된 알파벳 출력
-    mWrite "  " ;공백 출력
-    inc esi ;인덱스 증가
-    loop L1 
-    
-    jmp pm_end
+	xor edx,edx ;dl=0으로 초기화
+	cmp dl, [Space_Word + esi] ;al ;Space_Word에는 매치된 부분에만 "0이 아닌 값"이 저장되어있음
+	;Tip: 문자값을 비교할때는 edx레지스터를 써야한다. 꼭! 꼭! eax는 정수값 비교할 때만 쓰는 레지스터입니다.
+	je L5
+	mov dl, [Space_Word + esi]
+	mov Match_Alpha, dl
+	mov edx, OFFSET Match_Alpha 
+	call WriteString ;매치된 알파벳 출력
+	mWrite "  " ;공백 출력
+	inc esi ;인덱스 증가
+	loop L1 
+
+	jmp pm_end
 
 L5: ;매치되는 값이 없었으면
-    mWrite "   " ;공백 출력
-    inc esi ;인덱스 증가
-    loop L1
-    jmp pm_end
+	mWrite "   " ;공백 출력
+	inc esi ;인덱스 증가
+	loop L1
+	jmp pm_end
 
 pm_end:
-    call crlf 
+	call crlf 
 
 pop ebp
 ret
