@@ -14,9 +14,12 @@ FileName DWORD 0; 읽어와야 하는 파일명의 오프셋
 five_words BYTE "5words.txt", 0
 six_words BYTE "6words.txt", 0
 seven_words BYTE "7words.txt", 0
+eight_words BYTE "8words.txt", 0
+
 ; 읽어온 파일의 내용을 저장할 배열
 File_value_array BYTE 1000 DUP(0); 파일에서 읽어온 값을 저장할 배열
 File_value_array_Size DWORD 1000; 1000 저장
+
 ; 핸들러 저장
 handler DWORD ?
 
@@ -46,6 +49,7 @@ Wrong_Alpha BYTE 6 DUP(0)
 Space_Word BYTE 8 DUP(0)
 
 ; 입력한 알파벳
+Input_Alpha BYTE 0
 
 ; 매치되는 알파벳
 Match_Alpha BYTE 0
