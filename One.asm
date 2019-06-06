@@ -627,20 +627,20 @@ mov ebp,esp
 	je L3
 
 L1:	;5단어 일때
-    mov ecx, eax
-    jmp L4
+	mov ecx, eax
+	jmp L4
 
 L2:	;6단어 일때
-    mov ecx, eax
-    jmp L4
-	
+	mov ecx, eax
+	jmp L4
+
 L3:	;7단어 일때
-    mov ecx, eax
-    jmp L4
+	mov ecx, eax
+	jmp L4
 
 L4: ; word_length 만큼 언더바 출력
-    mWrite "-  "
-    loop L4
+	mWrite "-  "
+	loop L4
 
 	call Crlf
 
@@ -700,33 +700,33 @@ check_all:
 	loop check_all
 
 lose:
-    mwrite <"                     ##############################################",0ah>
-    mwrite <"                                                                   ",0ah>
-    mwrite <"                     *********** Game Over! You Dead XD ***********",0ah>
-    mwrite <"                                                                   ",0ah>
-    mwrite <"                     ##############################################",0ah>
-    invoke Sleep,1000h ;200h=1sec
-    exit
-    ;mov ebx, OFFSET caption2 
-    ;mov edx, OFFSET Lmsg
-    ;call MsgBoxAsk
-    ;cmp eax, 6 ;IDYES=6 IDNO=7
-    ;jne L3 
-    ;mov Replay, eax ;재도전 눌렀으면 Replay변수에 6들어감.
-    ;jmp L3
+	mwrite <"                     ##############################################",0ah>
+	mwrite <"                                                                   ",0ah>
+	mwrite <"                     *********** Game Over! You Dead XD ***********",0ah>
+	mwrite <"                                                                   ",0ah>
+	mwrite <"                     ##############################################",0ah>
+	invoke Sleep,1000h ;200h=1sec
+	exit
+	;mov ebx, OFFSET caption2 
+	;mov edx, OFFSET Lmsg
+	;call MsgBoxAsk
+	;cmp eax, 6 ;IDYES=6 IDNO=7
+	;jne L3 
+	;mov Replay, eax ;재도전 눌렀으면 Replay변수에 6들어감.
+	;jmp L3
 
 win:
-    call victory 
-    mwrite <"                     ##############################################",0ah>   
-    mwrite <"                                 *  ^      *        *    ^         ",0ah>
-    mwrite <"                             Wow ~ Game Clear! Congraturation!     ",0ah>
-    mwrite <"                       *  *                                  *  *  ",0ah>
-    mwrite <"                     ##############################################",0ah>
-    invoke Sleep,1000h ;200h=1sec
-    exit
-    ;mov ebx, OFFSET caption1 
-    ;mov edx, OFFSET Wmsg
-    ;call MsgBox 
+	call victory 
+	mwrite <"                     ##############################################",0ah>   
+	mwrite <"                                 *  ^      *        *    ^         ",0ah>
+	mwrite <"                             Wow ~ Game Clear! Congraturation!     ",0ah>
+	mwrite <"                       *  *                                  *  *  ",0ah>
+	mwrite <"                     ##############################################",0ah>
+	invoke Sleep,1000h ;200h=1sec
+	exit
+	;mov ebx, OFFSET caption1 
+	;mov edx, OFFSET Wmsg
+	;call MsgBox 
 
 L3:
 
@@ -742,19 +742,19 @@ mov ebp,esp
 	mov ecx, life ;목숨만큼 입력 가능하게 반복문 카운터 설정
 
 L1:
-    push ecx ;반복문의 카운터값을 복구하기 위해 저장해둠
-    mov esi,6 
-    sub esi,ecx  
-    mov edx, OFFSET Input_Alpha
-    mov ecx, 2 ;ReadString의 인자로 Input_Alpha의 크기만큼 ecx를 설정한다. 
-    call ReadString ;Input_Alpha에 입력한 문자 저장
+	push ecx ;반복문의 카운터값을 복구하기 위해 저장해둠
+	mov esi,6 
+	sub esi,ecx  
+	mov edx, OFFSET Input_Alpha
+	mov ecx, 2 ;ReadString의 인자로 Input_Alpha의 크기만큼 ecx를 설정한다. 
+	call ReadString ;Input_Alpha에 입력한 문자 저장
 
-    mov dl, Input_Alpha
-    push edx ;dl은 입력한 문자로 사용하기 위한 레지스터
-    call IS_CORRECT
-      
-    pop ecx ;반복문의 카운터값을 복구함
-    loop L1
+	mov dl, Input_Alpha
+	push edx ;dl은 입력한 문자로 사용하기 위한 레지스터
+	call IS_CORRECT
+	  
+	pop ecx ;반복문의 카운터값을 복구함
+	loop L1
 
 pop ebp
 ret
@@ -772,52 +772,52 @@ mov ebp,esp
 	xor edi,edi ;일치하는 단어 없는거 개수 체크용
 
 L2:
-    cmp ecx, 0 ;반복문을 다 돌았는가?
-    je end_all ;다 돌았음
-    mov al, [Random_Word + esi] 
-    cmp dl, al ;Input_Alpha(입력한 문자) = Random_Word[esi](맞춰야할 문자)인가?
-    je L2_ok
-    jne L2_no
+	cmp ecx, 0 ;반복문을 다 돌았는가?
+	je end_all ;다 돌았음
+	mov al, [Random_Word + esi] 
+	cmp dl, al ;Input_Alpha(입력한 문자) = Random_Word[esi](맞춰야할 문자)인가?
+	je L2_ok
+	jne L2_no
 
 L2_ok: ;해당 자리에 입력한 문자가 일치할 경우
-    mov [Space_Word + esi] , dl ;해당 문자를 저장함
+ 	mov [Space_Word + esi] , dl ;해당 문자를 저장함
 
-    inc esi ; 배열의 인덱스 값을 하나 증가시킴
-    ;mwrite "test " ;디버깅 테스트 확인용
-    loop L2 
-    jmp end_ret ;단어 끝부분을 맞출경우 L2_no로 넘어가는걸 방지하기 위해 end_ret로 이동
-    ;모든 단어 다맞추면 플래그!
+ 	inc esi ; 배열의 인덱스 값을 하나 증가시킴
+ 	;mwrite "test " ;디버깅 테스트 확인용
+ 	loop L2 
+ 	jmp end_ret ;단어 끝부분을 맞출경우 L2_no로 넘어가는걸 방지하기 위해 end_ret로 이동
+ 	;모든 단어 다맞추면 플래그!
 
 L2_no: ;해당 자리에 입력한 문자가 일치하지 않을 경우
-    inc esi ; 배열의 인덱스 값을 하나 증가시킴
-    inc edi ; 일치하는 단어 없는거 개수 체크용
-    ;mwrite "test2 " ;디버깅 테스트 확인용
-    loop L2
+	inc esi ; 배열의 인덱스 값을 하나 증가시킴
+	inc edi ; 일치하는 단어 없는거 개수 체크용
+	;mwrite "test2 " ;디버깅 테스트 확인용
+	loop L2
 
 end_all: ;단어의 끝부분이면
-    cmp esi, edi ;입력한 문자가 일치하는 문자가 하나도 존재하지 않았는가?
-    je all_no
-    jne end_ret
+	cmp esi, edi ;입력한 문자가 일치하는 문자가 하나도 존재하지 않았는가?
+	je all_no
+	jne end_ret
 
 all_no: ;맞출 단어에 입력한 문자가 들어가지 않을 경우
-    dec life ;남은 목숨 하나 깎는다.
-    mov ebx,tempebx ;ebx값을 복원한다
-    mov Wrong_Alpha[ebx], dl ;입력받았던 문자를 틀린문자에 저장한다. 
-    inc ebx 
-    mov tempebx, ebx ;ebx값을 복원하기위해 저장해둔다.
-    ;mwrite "test3 " ;디버깅 테스트 확인용
+	dec life ;남은 목숨 하나 깎는다.
+	mov ebx,tempebx ;ebx값을 복원한다
+	mov Wrong_Alpha[ebx], dl ;입력받았던 문자를 틀린문자에 저장한다. 
+	inc ebx 
+	mov tempebx, ebx ;ebx값을 복원하기위해 저장해둔다.
+	;mwrite "test3 " ;디버깅 테스트 확인용
 
 end_ret: ;공통
-    ;call clrscr ;화면지움
-    call PRINT_MATCHED ;현재까지 맞춘 알파벳 출력
-    call PRINT_UNDERBAR ;언더바 출력
-    call PRINT_WRONG_ALPHA ;현재까지 틀린 알파벳 출력
-    call PRINT_LIFE ;남은 목숨 출력
-    call P_Hangman ;행맨출력
-    call IS_clear ;클리어 여부 확인
-    call crlf
-    call crlf
-    call crlf
+	;call clrscr ;화면지움
+	call PRINT_MATCHED ;현재까지 맞춘 알파벳 출력
+	call PRINT_UNDERBAR ;언더바 출력
+	call PRINT_WRONG_ALPHA ;현재까지 틀린 알파벳 출력
+	call PRINT_LIFE ;남은 목숨 출력
+	call P_Hangman ;행맨출력
+	call IS_clear ;클리어 여부 확인
+	call crlf
+	call crlf
+	call crlf
 
 pop ebp
 ret 
@@ -1307,34 +1307,34 @@ mov ebp,esp
 	jz Life0
 
 Life6:            ;목숨이 6개 일때
-    call stick
-    Jmp exit1
+	call stick
+	Jmp exit1
 
 Life5:            ;목숨이 5개 일때
-    call head
-    Jmp exit1
+	call head
+	Jmp exit1
 
 Life4:            ;목숨이 4개 일때
-    call body
-    Jmp exit1
+	call body
+	Jmp exit1
 
 Life3:            ;목숨이 3개 일때
-    call leftarm
-    Jmp exit1
+	call leftarm
+	Jmp exit1
 
 Life2:            ;목숨이 2개 일때
-    call rightarm
-    Jmp exit1
+	call rightarm
+	Jmp exit1
 
 Life1:            ;목숨이 1개 일때
-    call leftleg
-    Jmp exit1
+	call leftleg
+	Jmp exit1
 
 Life0:            ;목숨이 0개 일때
-    call rightleg
-    ;sleep
-    ;call die
-    Jmp exit1
+	call rightleg
+	;sleep
+	;call die
+	Jmp exit1
 
 exit1:
 
