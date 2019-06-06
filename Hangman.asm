@@ -42,8 +42,8 @@ Random_Word BYTE 100 DUP(0)
 ; 틀린단어(6개까지 틀릴수 있음)
 Wrong_Alpha BYTE 6 DUP(0)
 
-; 매치된 단어가 들어갈 곳(처음엔 빈 단어 / 최대 7글자)
-Space_Word BYTE 7 DUP(0)
+; 매치된 단어가 들어갈 곳(처음엔 빈 단어 / 최대 8글자)
+Space_Word BYTE 8 DUP(0)
 
 ; 입력한 알파벳
 
