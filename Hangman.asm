@@ -3,22 +3,22 @@ INCLUDE Irvine32.inc
 INCLUDE macros.inc
 
 .data
-;########################## Menu variables ########################## 
-choose_menu_num DWORD 0    ; Choose_Menu input 
+; ########################## Menu variables ##########################
+choose_menu_num DWORD 0    ; Choose_Menu input
 print_made_by_input BYTE ? ; restart reply Y/N
 
-;################### Rock-Scissors-Paper Variables ##################
+; ################### Rock-Scissors-Paper Variables ##################
 randVal DWORD ? ; Computer's choice
 choice DWORD ?  ; Player's choice
 counter DWORD ? ; Counter of win in a row
 
-;####################### Hangman variables ##########################
+; ####################### Hangman variables ##########################
 
-; *** File I/O  *** 
-Random_Parameter DWORD 0 ; 랜덤값 인자
-set_File DWORD 0         ; 파일을 설정할 랜덤 값
-set_Word DWORD 0         ; 단어를 고를 랜덤 값
-FileName DWORD 0         ; 읽어와야 하는 파일명의 오프셋
+; *** File I/O  ***
+Random_Parameter DWORD 0 ; random value parameter
+set_File DWORD 0         ; Random value that to set file
+set_Word DWORD 0         ; Random value that to choose word
+FileName DWORD 0         ; Offset of file names to be read
 
 four_words BYTE "4words.txt",0
 five_words BYTE "5words.txt",0
@@ -26,33 +26,33 @@ six_words BYTE "6words.txt",0
 seven_words BYTE "7words.txt",0
 eight_words BYTE "8words.txt",0
 
-File_value_array BYTE 1000 DUP(0) ; File reading stream 
+File_value_array BYTE 1000 DUP(0) ; File reading stream
 File_value_array_Size DWORD 1000  ; File Max Size
 
 handler DWORD ?
 
 Choose_file_param DWORD 0 ; 파일 고르기 함수 인자
-File_length DWORD 0       ; 배열의 알파벳 수 저장
+File_length DWORD 0       ; Save the number of alphabets in the array
 
 ; Find_Zero함수에서 사용
 find_zero_offset DWORD 0 ; 0을 찾은 곳의 offset을 저장
 find_zero_length DWORD 0 ; 0을 찾은 까지의 길이를 저장
 
-; *** Game backend *** 
+; *** Game backend ***
 life DWORD 6
-word_length DWORD 0         ; length of word
+word_length DWORD 0         ; Length of word
 Random_Word BYTE 100 DUP(0) ; 랜덤으로 골라진 단어(맞춰야할 단어)
 Wrong_Alpha BYTE 6 DUP(0)   ; 틀린단어 (6개까지 틀릴수 있음)
 Space_Word BYTE 8 DUP(0)    ; 매치된 단어가 들어갈 곳(처음엔 빈 단어)
-Input_Alpha BYTE 0          ; 입력한 알파벳 
-Match_Alpha BYTE 0          ; 매치되는 알파벳 
-Replay DWORD 0              ; replay 변수 (아직 미구현)
-tempebx DWORD 0             ; ebx 임시저장소 
+Input_Alpha BYTE 0          ;  Entered alphabet
+Match_Alpha BYTE 0          ; Matched alphabet
+Replay DWORD 0              ; Replay 변수 (아직 미구현)
+tempebx DWORD 0             ; ebx 임시저장소
 
 ; console size
 outHandle HANDLE 0
-windowRect1 SMALL_RECT <0,0,55,50> ;RSP CONSOLE SET
-windowRect2 SMALL_RECT <0,0,90,55> ;HANGMAN CONSOLE SET
+windowRect1 SMALL_RECT <0,0,55,50> ; RSP CONSOLE SET
+windowRect2 SMALL_RECT <0,0,90,55> ; HANGMAN CONSOLE SET
 
 .code
 Print_Start PROC ; MainScreen
@@ -83,7 +83,7 @@ Print_Menu ENDP
 
 Print_Made_by PROC
 Wait_N:
-   call clrscr   ; 화면 클리어
+   call clrscr   ; Clear the console
    mWrite < "==========================================================================================================",0ah>
    mWrite < "                    Made By                                                ",0ah>
    mWrite < "==========================================================================================================",0ah>
@@ -94,9 +94,9 @@ Wait_N:
    mWrite < "==========================================================================================================",0ah>
    mWrite < "다시 돌아가시겠습니까?(Y/N) : ">
 
-   call ReadChar   ; Y/N 입력받음
-   mov print_made_by_input, al 
-   cmp print_made_by_input, "Y"
+   call ReadChar   ; Input Y or N
+   mov print_made_by_input, al
+   cmp print_made_by_input, "Y" ; If input "Y"
    jz Return_main
    jmp Wait_N
 
@@ -106,7 +106,7 @@ Print_Made_by ENDP
 
 Choose_Menu PROC
 ReStart:
-   call clrscr ; 화면 클리어
+   call clrscr ; clear the console
    call Print_Menu
 
 ReInput:
@@ -422,30 +422,29 @@ P_PRINT ENDP
 
 
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~ Hangman Area ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
-Set_Random_Value PROC   ; 인자 변수 : Random_Parameter, 반환값 : eax 레지스터
+Set_Random_Value PROC   ; parameter variable : Random_Parameter, return value : eax register
 push ebp
 mov ebp,esp
 
-   ; 랜덤 값을 고르는 프로시저
+   ; Procedure that choose random value
    mov eax, Random_Parameter
    call RandomRange
-   inc eax           ; 1 더해줘서 1 ~ Random_Parameter 까지의 범위가 골라지도록 함. ; 리턴 값
-   ;call DumpRegs
+   inc eax           ; 1 더해줘서 1 ~ Random_Parameter 까지의 범위가 골라지도록 함. ; return value of RandomRange
 
 pop ebp
 ret
 Set_random_Value ENDP
 
 
-Read_File PROC ; 인자 : FileName(오프셋), 리턴 : File_value_array에 파일의 내용 저장
+Read_File PROC ; parameter : FileName(offset), return value : save file's content in File_value_array
 push ebp
 mov ebp,esp
 
    mov edx, FileName
    call OpenInputFile
-   mov handler, eax ; 핸들러 저장
+   mov handler, eax ; save handler
    
-   ; 파일 읽어오기 
+   ; Read file
    mov eax, handler 
    mov edx, OFFSET File_value_array
    mov ecx, File_value_array_Size
@@ -456,7 +455,7 @@ ret
 Read_File ENDP
 
 
-Choose_File PROC ; 인자 : Choose_file_param, 리턴 값 : FileName( offset 임. ), Read_File 프로시저를 통해 File_value_array에 단어들 저장
+Choose_File PROC ; parameter : Choose_file_param, return value : FileName( offset. ),  purpose : save the words in File_value_array thru "Read_File" procedure
 push ebp
 mov ebp,esp
 
@@ -470,31 +469,31 @@ mov ebp,esp
 	je J4
 	cmp eax, 5
 	je J5
-J1:				; 점프 1, 길이 5의 단어장
+J1:				; Jump 1, word list (lenght == 5)
 	mov FileName, OFFSET five_words
-	call Read_File	; File_value_array에 단어들 저장
+	call Read_File	; save the words in File_value_array
 	mov word_length, 5
 	jmp J6
 
-J2:				; 점프 2, 길이 6의 단어장
+J2:				; Jump 2, word list (lenght == 6)
 	mov FileName, OFFSET six_words
-	call Read_File	; File_value_array에 단어들 저장
+	call Read_File	; save the words in File_value_array
 	mov word_length, 6
 	jmp J6
 
-J3:				; 점프 3, 길이 7의 단어장
+J3:				; Jump 3, word list (lenght == 7)
 	mov FileName, OFFSET seven_words
-	call Read_File	; File_value_array에 단어들 저장
+	call Read_File	; save the words in File_value_array
 	mov word_length, 7
 	jmp J6
-J4:				; 점프 4, 길이 8의 단어장
+J4:				; Jump 4, word list (lenght == 8)
 	mov FileName, OFFSET eight_words
-	call Read_File	; File_value_array에 단어들 저장
+	call Read_File	; save the words in File_value_array
 	mov word_length, 8
 	jmp J6
-J5:				; 점프 5, 길이 4의 단어장
+J5:				; Jump 5, word list (lenght == 4)
 	mov FileName, OFFSET four_words
-	call Read_File	; File_value_array에 단어들 저장
+	call Read_File	; save the words in File_value_array
 	mov word_length, 4
 	jmp J6	
 	J6:
@@ -503,33 +502,24 @@ ret
 Choose_File ENDP
 
 
-Choose_Word PROC ; 인자 : FileName , 리턴 : Random_Word 배열
+Choose_Word PROC ; parameter : FileName , return value : Random_Word array
 push ebp
 mov ebp,esp
 
-   ;mov eax, FIleName ; Offset 저장
    mov File_length, LENGTHOF File_value_array
-   ; mov eax, File_length
-   ; call DumpRegs ;check
    call Find_File_Length
    ; 랜덤으로 단어 고르기
    mov eax, find_zero_length
-   ; call DumpRegs; check
    call RandomRange ; 리턴 : eax
    ; mov eax, find_zero_length 이거 넣으면 총 단어의 개수를 구해주고 이걸 빼면 랜덤으로 단어를 고를 수 있게 됨
    mov ecx, word_length
-   ; call DumpRegs ; check
    add ecx, 2  ; 개행은 2byte 크기이기 때문에 한 줄의 바이트를 word_length+2로 계산
    mov edx, 0  ; div를 사용하면 나머지가 edx에 저장이 되기 때문에 edx의 값을 0으로 초기화 해주어야 함
-   ;call DumpRegs ;check
    div ecx           ; 몫 : eax에 저장, 나머지 : edx에 저장 ; 각 파일의 총 단어 개수
-   ;call DumpRegs ;check
    
-   ; call DumpRegs; check
    mov ebx, word_length
    add ebx, 2 ; 개행은 2byte 크기이기 때문에 한 줄의 바이트를 word_length+2로 계산
    mul ebx ; eax * ebx , 몫 : eax
-   ;mov ebx, eax
    
    ;고른 단어 출력
    mov ebx, OFFSET File_value_array
@@ -580,7 +570,7 @@ pop ebp
 ret
 Find_File_Length ENDP
 
-PRINT_MATCHED PROC ; show matched alpha until now 
+PRINT_MATCHED PROC ; Print matched alphabet
 push ebp    
 mov ebp,esp
 
@@ -662,7 +652,7 @@ pop ebp
 ret
 PRINT_UNDERBAR ENDP
 
-PRINT_WRONG_ALPHA PROC ; show wrong alpha until now 
+PRINT_WRONG_ALPHA PROC ; show wrong alpha until now
 push ebp    
 mov ebp,esp
 
@@ -751,22 +741,22 @@ INPUT PROC ; HangMan user's input
 push ebp
 mov ebp,esp
 
-   mov ecx, life       ;User can input during living
+   mov ecx, life       ; User can input during living
 
 input_main:
-   push ecx            ;save input_main ecx
+   push ecx            ; save input_main ecx
    mov esi,6 
    sub esi,ecx  
    mwrite <"[>]input : ",0>
    mov edx, OFFSET Input_Alpha
-   mov ecx, 2          ;Input_Alpha size (including NULL)
+   mov ecx, 2          ; Input_Alpha size (including NULL)
    call ReadString 
 
-   mov dl, Input_Alpha ;chracter is 1byte
-   push edx            ;save input_main edx
+   mov dl, Input_Alpha ; chracter is 1byte
+   push edx            ; save input_main edx
    call IS_CORRECT
      
-   pop ecx             ;Recover input_main ecx
+   pop ecx             ; Recover input_main ecx
    loop input_main
 
 pop ebp
@@ -796,30 +786,30 @@ isc_main_ok: ; correct alpha
     loop isc_main
     jmp isc_end
 
-isc_main_no: ; not correct alpha
+isc_main_no:	; not correct alpha
    inc esi  
-   inc edi  ; non-matched alpha count increase
+   inc edi		; non-matched alpha count increase
    loop isc_main
 
-end_all: ; checked all alpha
-   cmp esi, edi ; These's nothing exist matched?
+end_all:				; checked all alpha
+   cmp esi, edi	; These's nothing exist matched?
    je all_no
    jne isc_end
 
-all_no: ; There's nothing matched alpha
-   dec life                 ; decrease life
-   mov ebx,tempebx          ; recover ebx
-   mov Wrong_Alpha[ebx], dl ; store Input_Alpha to Wrong_Alpha 
-   inc ebx                  ; increase ebx
-   mov tempebx, ebx         ; save ebx
+all_no:									; There's nothing matched alpha
+   dec life								; decrease life
+   mov ebx,tempebx				; recover ebx
+   mov Wrong_Alpha[ebx], dl	; store Input_Alpha to Wrong_Alpha 
+   inc ebx								; increase ebx
+   mov tempebx, ebx				; save ebx
 
-isc_end: ;공통
-   call PRINT_MATCHED     ;현재까지 맞춘 알파벳 출력
-   call PRINT_UNDERBAR    ;언더바 출력
-   call PRINT_WRONG_ALPHA ;현재까지 틀린 알파벳 출력
-   call PRINT_LIFE        ;남은 목숨 출력
-   call PRINT_Hangman         ;행맨출력
-   call IS_CLEAR          ;클리어 여부 확인
+isc_end: ; Common contents
+   call PRINT_MATCHED			; Print matched alphabet
+   call PRINT_UNDERBAR			; Print underbar
+   call PRINT_WRONG_ALPHA	; Show wrong alpha until now
+   call PRINT_LIFE					; Print remaining life count
+   call PRINT_Hangman			; Print hangman
+   call IS_CLEAR						; Check whether clear
    call crlf
    call crlf
    call crlf
@@ -828,7 +818,7 @@ pop ebp
 ret 
 IS_CORRECT ENDP
 
-; 기둥출력 프로시저
+; procedure that print pillar
 stick PROC
 push ebp
 mov ebp,esp
@@ -886,7 +876,7 @@ pop ebp
 ret
 stick ENDP
 
-; 머리출력 프로시저
+; procedure that print head
 head PROC
 push ebp
 mov ebp,esp
@@ -944,7 +934,7 @@ pop ebp
 ret
 head ENDP
 
-; 몸통출력 프로시저
+; procedure that print body
 body PROC
 push ebp
 mov ebp,esp
@@ -1002,7 +992,7 @@ pop ebp
 ret
 body ENDP
 
-; 왼팔출력 프로시저
+; procedure that print left arm
 leftarm PROC
 push ebp
 mov ebp,esp
@@ -1060,7 +1050,7 @@ pop ebp
 ret
 leftarm ENDP
 
-; 오른팔출력 프로시저
+; procedure that print right arm
 rightarm PROC
 push ebp
 mov ebp,esp
@@ -1118,7 +1108,7 @@ pop ebp
 ret
 rightarm ENDP
 
-; 왼다리출력 프로시저
+; procedure that print left leg
 leftleg PROC
 push ebp
 mov ebp,esp
@@ -1176,7 +1166,7 @@ pop ebp
 ret
 leftleg ENDP
 
-; 오른다리출력 프로시저
+; procedure that print right leg
 rightleg PROC
 push ebp
 mov ebp,esp
@@ -1234,7 +1224,7 @@ pop ebp
 ret
 rightleg ENDP
 
-; Dead 프로시저
+; Dead procedure
 Dead PROC
 push ebp
 mov ebp,esp
@@ -1398,7 +1388,7 @@ pop ebp
 ret
 Dead ENDP
 
-; 승리출력 프로시저
+; procedure that print win the game
 victory PROC
 push ebp
 mov ebp,esp
@@ -1454,12 +1444,12 @@ pop ebp
 ret
 victory ENDP
 
-; 행맨출력 프로시저
+; procedure that print hangman
 PRINT_Hangman PROC
 push ebp
 mov ebp,esp
 
-   mov eax, life ;목숨 개수를 eax에 저장
+   mov eax, life ; save the life count in eax register
    cmp eax, 6
    jz Life6
    cmp eax, 5
@@ -1475,31 +1465,31 @@ mov ebp,esp
    cmp eax, 0
    jz Life0
 
-Life6:            ;목숨이 6개 일때
+Life6:				; If life count is 6
    call stick
    Jmp exit1
 
-Life5:            ;목숨이 5개 일때
+Life5:				; If life count is 5
    call head
    Jmp exit1
 
-Life4:            ;목숨이 4개 일때
+Life4:				; If life count is 4
    call body
    Jmp exit1
 
-Life3:            ;목숨이 3개 일때
+Life3:				; If life count is 3
    call leftarm
    Jmp exit1
 
-Life2:            ;목숨이 2개 일때
+Life2:				; If life count is 2
    call rightarm
    Jmp exit1
 
-Life1:            ;목숨이 1개 일때
+Life1:				; If life count is 1
    call leftleg
    Jmp exit1
 
-Life0:			; 목숨이 0개 일때
+Life0:				; If life count is 0
       call rightleg
       invoke sleep, 100h
       call Dead
@@ -1510,10 +1500,10 @@ exit1:
 pop ebp
 ret
 PRINT_Hangman ENDP
-; 행맨출력 프로시저 종료
+; End PRINT_Hangman procedure
 
 Run_HangMan PROC
-; 함수 프롤로그
+; Function prologue
 push ebp
 mov ebp,esp
 
@@ -1525,43 +1515,41 @@ mov ebp,esp
    invoke Sleep,750h
    call clrscr
 Hangman:
-   mov Replay, 0 ;재시작 했을 때를 고려해서 재시작변수를 초기화함
+   mov Replay, 0 ;Initialize "restart variable (Replay)"
    call Randomize ; 프로시저 시작 시드 값 초기화
 
    ; 읽어올 단어장 파일 랜덤으로 고르기
    mov Random_Parameter, 5 ; Set_Random_Value를 위한 인자값 설정 1 ~ 5
    call Set_Random_Value
-   
-   ;call DumpRegs    ; 체크 용
-   ; 조건문 (파일 고르기) 
-   mov Choose_file_param, eax 
+
+   ; Conditional statement (Select file(4~8)) 
+   mov Choose_file_param, eax
    call Choose_File
    
-   ; 고른 파일에서 단어 고르기
+   ; Select word in the selected file
    call Choose_Word
    
-   ; 단어의 길이만큼 언더바 출력
+   ; Print underbar
    call PRINT_UNDERBAR
    
-   ; 틀린 알파벳 현황 출력(edx~>readstring한 값을 인자로 받은 뒤부터 실행가능해서 함수로 호출하면 오류뜸)
+   ; show wrong alpha until now (edx~>readstring한 값을 인자로 받은 뒤부터 실행가능해서 함수로 호출하면 오류뜸)
    call PRINT_WRONG_ALPHA
-   ;mwrite <"Wrong Alphabet: ",0>
    call crlf;
    
-   ; 남은목숨 현황 출력 
+   ; print remaining life count
    call PRINT_LIFE
    
-   ; 입력 시작
+   ; Start input
    call INPUT
-   
-   ; 위에서 열였던 파일 닫기
+
+   ; Close file
    mov eax, handler
    call CloseFile
    
-   cmp Replay, 6 ;재시작 눌렀는가?
-   je Hangman ; 재시작 
+   cmp Replay, 6 ; If player replied "Replay"?
+   je Hangman ; restart
 
-; 함수 에필로그
+; Function epilogue
 pop ebp
 ret
 Run_HangMan ENDP
