@@ -41,7 +41,7 @@ life DWORD 6
 word_length DWORD 0         ; 단어의 길이
 Random_Word BYTE 100 DUP(0) ; 랜덤으로 골라진 단어(맞춰야할 단어)
 Wrong_Alpha BYTE 6 DUP(0)   ; 틀린단어 (6개까지 틀릴수 있음)
-Space_Word BYTE 6 DUP(0)    ; 매치된 단어가 들어갈 곳(처음엔 빈 단어)
+Space_Word BYTE 7 DUP(0)    ; 매치된 단어가 들어갈 곳(처음엔 빈 단어)
 Input_Alpha BYTE 0          ; 입력한 알파벳 
 Match_Alpha BYTE 0          ; 매치되는 알파벳 
 Replay DWORD 0              ; replay 변수 (아직 미구현)
@@ -157,7 +157,9 @@ mov ebp, esp
 	mov outHandle,eax
 	invoke SetConsoleWindowInfo,outHandle,TRUE,ADDR windowRect1
 	
-	mWrite < "                    Running_Rock-Scissors-Paper~~                                                ",0ah>
+	mWrite < "            Running_Rock-Scissors-Paper~~",0ah>
+	invoke Sleep,750h
+	call clrscr
 	call Randomize ; Seed set
 
 RSP_main:
@@ -550,6 +552,12 @@ PRINT_MATCHED PROC ; show matched alpha until now
 push ebp    
 mov ebp,esp
 
+	; set cursor position
+	xor edx, edx
+	mov dh, 2
+	mov dl, 35
+	call Gotoxy 
+
 	mov ecx, word_length
 	mov esi,0 
 	xor eax,eax
@@ -585,6 +593,12 @@ PRINT_UNDERBAR PROC ; show underbar until now
 push ebp
 mov ebp,esp
 	
+	; set cursor position
+	xor edx, edx
+	mov dh, 3
+	mov dl, 35
+	call Gotoxy 
+
 	mov eax, word_length
 
 	cmp eax, 5
@@ -620,6 +634,13 @@ PRINT_WRONG_ALPHA PROC ; show wrong alpha until now
 push ebp    
 mov ebp,esp
 
+	; set cursor position
+	xor edx, edx
+	mov dh, 4
+	mov dl, 15 
+	call Gotoxy 
+
+	mov eax, word_length
 	mwrite <"Wrong Alphabet: ",0>
 	mov edx, OFFSET Wrong_Alpha 
 	call WriteString 
@@ -632,6 +653,12 @@ PRINT_WRONG_ALPHA ENDP
 PRINT_LIFE PROC ; show life on now 
 push ebp    
 mov ebp,esp
+
+	; set cursor position
+	xor edx, edx
+	mov dh, 5
+	mov dl, 15
+	call Gotoxy 
 
 	mwrite <"Life : ",0>
 	mov eax,life
@@ -667,6 +694,9 @@ lose:
 	mwrite <"                     *********** Game Over! You Dead XD ***********",0ah>
 	mwrite <"                                                                   ",0ah>
 	mwrite <"                     ##############################################",0ah>
+	mwrite <"                                   Wrong WORD : ",0>
+	mov edx, OFFSET Random_Word
+	call writeString
 	invoke Sleep,1000h ;200h=1sec
 	exit
 
@@ -695,6 +725,7 @@ input_main:
 	push ecx            ;save input_main ecx
 	mov esi,6 
 	sub esi,ecx  
+	mwrite <"[>]input : ",0>
 	mov edx, OFFSET Input_Alpha
 	mov ecx, 2          ;Input_Alpha size (including NULL)
 	call ReadString 
@@ -1295,7 +1326,8 @@ mov ebp,esp
 	mov outHandle,eax
 	invoke SetConsoleWindowInfo,outHandle,TRUE,ADDR windowRect2
 	mWrite < "                    Running_Hangman~~                                                ",0ah>
-
+	invoke Sleep,750h
+	call clrscr
 Hangman:
 	mov Replay, 0 ;재시작 했을 때를 고려해서 재시작변수를 초기화함
 	call Randomize ; 프로시저 시작 시드 값 초기화
@@ -1316,7 +1348,8 @@ Hangman:
 	call PRINT_UNDERBAR
 	
 	; 틀린 알파벳 현황 출력(edx~>readstring한 값을 인자로 받은 뒤부터 실행가능해서 함수로 호출하면 오류뜸)
-	mwrite <"Wrong Alphabet: ",0>
+	call PRINT_WRONG_ALPHA
+	;mwrite <"Wrong Alphabet: ",0>
 	call crlf;
 	
 	; 남은목숨 현황 출력 
