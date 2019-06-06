@@ -40,7 +40,7 @@ find_zero_length DWORD 0 ; 0을 찾은 까지의 길이를 저장
 
 ; *** Game backend *** 
 life DWORD 6
-word_length DWORD 0         ; 단어의 길이
+word_length DWORD 0         ; length of word
 Random_Word BYTE 100 DUP(0) ; 랜덤으로 골라진 단어(맞춰야할 단어)
 Wrong_Alpha BYTE 6 DUP(0)   ; 틀린단어 (6개까지 틀릴수 있음)
 Space_Word BYTE 8 DUP(0)    ; 매치된 단어가 들어갈 곳(처음엔 빈 단어)
