@@ -20,9 +20,11 @@ set_File DWORD 0         ; 파일을 설정할 랜덤 값
 set_Word DWORD 0         ; 단어를 고를 랜덤 값
 FileName DWORD 0         ; 읽어와야 하는 파일명의 오프셋
 
+four_words BYTE "4words.txt",0
 five_words BYTE "5words.txt",0
 six_words BYTE "6words.txt",0
 seven_words BYTE "7words.txt",0
+eight_words BYTE "8words.txt",0
 
 File_value_array BYTE 1000 DUP(0) ; File reading stream 
 File_value_array_Size DWORD 1000  ; File Max Size
@@ -41,7 +43,7 @@ life DWORD 6
 word_length DWORD 0         ; 단어의 길이
 Random_Word BYTE 100 DUP(0) ; 랜덤으로 골라진 단어(맞춰야할 단어)
 Wrong_Alpha BYTE 6 DUP(0)   ; 틀린단어 (6개까지 틀릴수 있음)
-Space_Word BYTE 7 DUP(0)    ; 매치된 단어가 들어갈 곳(처음엔 빈 단어)
+Space_Word BYTE 8 DUP(0)    ; 매치된 단어가 들어갈 곳(처음엔 빈 단어)
 Input_Alpha BYTE 0          ; 입력한 알파벳 
 Match_Alpha BYTE 0          ; 매치되는 알파벳 
 Replay DWORD 0              ; replay 변수 (아직 미구현)
@@ -436,7 +438,10 @@ mov ebp,esp
 	je J2
 	cmp eax, 3
 	je J3
-
+	cmp eax, 4
+	je J4
+	cmp eax, 5
+	je J5
 J1:                     ; 점프 1
 	mov FileName, OFFSET five_words
 	call Read_File    ; File_value_array에 단어들 저장
@@ -444,7 +449,7 @@ J1:                     ; 점프 1
 	;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
 	;call WriteString
 	mov word_length, 5
-	jmp J4
+	jmp J6
 
 J2:                     ; 점프 2
 	mov FileName, OFFSET six_words
@@ -453,7 +458,7 @@ J2:                     ; 점프 2
 	;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
 	;call WriteString
 	mov word_length, 6
-	jmp J4
+	jmp J6
 
 J3:                     ; 점프 3
 	mov FileName, OFFSET seven_words
@@ -462,9 +467,25 @@ J3:                     ; 점프 3
 	;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
 	;call WriteString
 	mov word_length, 7
-	jmp J4
-
-J4:
+	jmp J6
+J4:				; 점프 4
+	mov FileName, OFFSET eight_words
+	call Read_File	; File_value_array에 단어들 저장
+	;call DumpRegs	; 체크 용
+	;mov edx, OFFSET File_value_array	; 파일의 값들 출력 (잘 읽어왔는지 체크용)
+	;call WriteString
+	mov word_length, 8
+	jmp J6
+J5:				; 점프 5
+	mov FileName, OFFSET eight_words
+	call Read_File	; File_value_array에 단어들 저장
+	;call DumpRegs	; 체크 용
+	;mov edx, OFFSET File_value_array	; 파일의 값들 출력 (잘 읽어왔는지 체크용)
+	;call WriteString
+	mov word_length, 4
+	jmp J6	
+	J6:
+J6:
 
 pop ebp
 ret
@@ -550,7 +571,7 @@ Find_File_Length ENDP
 
 PRINT_MATCHED PROC ; show matched alpha until now 
 push ebp    
-mov ebp,esp
+mov ebp,espsa
 
 	; set cursor position
 	xor edx, edx
@@ -1497,7 +1518,7 @@ Hangman:
 	call Randomize ; 프로시저 시작 시드 값 초기화
 
 	; 파일 랜덤으로 고르기
-	mov Random_Parameter, 3 ; Set_Random_Value를 위한 인자값 설정 1 ~ 3
+	mov Random_Parameter, 5 ; Set_Random_Value를 위한 인자값 설정 1 ~ 5
 	call Set_Random_Value
 	
 	;call DumpRegs    ; 체크 용
