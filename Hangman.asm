@@ -1398,7 +1398,7 @@ mov ebp,esp
 	mWrite < "                                      ;~                             ",0ah>
 	mWrite < "                                      ,!                             ",0ah>
 	mWrite < "                                      $.                             ",0ah>
-	mWrite < "                                     .!                                          ",0ah>
+	mWrite < "                                     .!                              ",0ah>
 	mWrite < "                                     *,                              ",0ah>
 	mWrite < "                                    ,=                               ",0ah>
 	mWrite < "                                   =                                 ",0ah>
