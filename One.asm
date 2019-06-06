@@ -260,7 +260,7 @@ lose:
 	sub eax,choice ;1
 	cmp eax,2
 	je win
-	
+
 	mWrite <"Player Lose! OTL",0ah>
 	mWrite "Win Counter:"
 	mov eax,counter
@@ -464,31 +464,32 @@ mov ebp,esp
 	je J3
 
 J1:                     ; 점프 1
-    mov FileName, OFFSET five_words
-    call Read_File    ; File_value_array에 단어들 저장
-    ;call DumpRegs    ; 체크 용
-    ;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
-    ;call WriteString
-    mov word_length, 5
-    jmp J4
+	mov FileName, OFFSET five_words
+	call Read_File    ; File_value_array에 단어들 저장
+	;call DumpRegs    ; 체크 용
+	;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
+	;call WriteString
+	mov word_length, 5
+	jmp J4
 
 J2:                     ; 점프 2
-    mov FileName, OFFSET six_words
-    call Read_File    ; File_value_array에 단어들 저장
-    ;call DumpRegs    ; 체크 용
-    ;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
-    ;call WriteString
-    mov word_length, 6
-    jmp J4
+	mov FileName, OFFSET six_words
+	call Read_File    ; File_value_array에 단어들 저장
+	;call DumpRegs    ; 체크 용
+	;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
+	;call WriteString
+	mov word_length, 6
+	jmp J4
 
 J3:                     ; 점프 3
-    mov FileName, OFFSET seven_words
-    call Read_File    ; File_value_array에 단어들 저장
-    ;call DumpRegs    ; 체크 용
-    ;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
-    ;call WriteString
-    mov word_length, 7
-    jmp J4
+	mov FileName, OFFSET seven_words
+	call Read_File    ; File_value_array에 단어들 저장
+	;call DumpRegs    ; 체크 용
+	;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
+	;call WriteString
+	mov word_length, 7
+	jmp J4
+
 J4:
 
 pop ebp
