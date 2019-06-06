@@ -534,12 +534,12 @@ mov ebp,esp
 	;call DumpRegs ;check 
 
 L1:                           ; Random_Word 배열에 단어를 저장하는 루프
-    mov eax, [ebx]
-    mov [edx], eax
-    inc ebx
-    inc edx
-    ;call DumpRegs ;check 
-    loop L1
+	mov eax, [ebx]
+	mov [edx], eax
+	inc ebx
+	inc edx
+	;call DumpRegs ;check 
+	loop L1
 
 	mov edx, OFFSET Random_Word
 	call WriteString
