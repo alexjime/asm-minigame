@@ -260,7 +260,7 @@ lose:
 	sub eax,choice ;1
 	cmp eax,2
 	je win
-	;
+	
 	mWrite <"Player Lose! OTL",0ah>
 	mWrite "Win Counter:"
 	mov eax,counter
@@ -274,7 +274,7 @@ lose:
 	je R_lose
 	cmp eax,3
 	je P_lose
-	;
+
 S_lose:
 	call S_print
 	mWrite <"||                  P L A Y E R                  ||",0ah>
@@ -464,31 +464,31 @@ mov ebp,esp
 	je J3
 
 J1:                     ; 점프 1
-      mov FileName, OFFSET five_words
-      call Read_File    ; File_value_array에 단어들 저장
-      ;call DumpRegs    ; 체크 용
-      ;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
-      ;call WriteString
-      mov word_length, 5
-      jmp J4
+    mov FileName, OFFSET five_words
+    call Read_File    ; File_value_array에 단어들 저장
+    ;call DumpRegs    ; 체크 용
+    ;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
+    ;call WriteString
+    mov word_length, 5
+    jmp J4
 
 J2:                     ; 점프 2
-      mov FileName, OFFSET six_words
-      call Read_File    ; File_value_array에 단어들 저장
-      ;call DumpRegs    ; 체크 용
-      ;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
-      ;call WriteString
-      mov word_length, 6
-      jmp J4
+    mov FileName, OFFSET six_words
+    call Read_File    ; File_value_array에 단어들 저장
+    ;call DumpRegs    ; 체크 용
+    ;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
+    ;call WriteString
+    mov word_length, 6
+    jmp J4
 
 J3:                     ; 점프 3
-      mov FileName, OFFSET seven_words
-      call Read_File    ; File_value_array에 단어들 저장
-      ;call DumpRegs    ; 체크 용
-      ;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
-      ;call WriteString
-      mov word_length, 7
-      jmp J4
+    mov FileName, OFFSET seven_words
+    call Read_File    ; File_value_array에 단어들 저장
+    ;call DumpRegs    ; 체크 용
+    ;mov edx, OFFSET File_value_array   ; 파일의 값들 출력 (잘 읽어왔는지 체크용)
+    ;call WriteString
+    mov word_length, 7
+    jmp J4
 J4:
 
 pop ebp
@@ -687,16 +687,16 @@ mov ebp,esp
 	xor esi, esi ;esi 초기화
 
 check_all:
-   ;jmp L3
-   ;cmp ecx, 0
-   ;je win
-   mov dl, [space_word+esi]
-   cmp dl, 0
-   je L3 
-   inc esi
-   cmp ecx, 1 ;마지막까지 다 맞췄었다면  (1로둔이유는 ecx=0이 되면 loop를 다시 반복하지 않게되기때문임)
-   je win
-   loop check_all
+	;jmp L3
+	;cmp ecx, 0
+	;je win
+	mov dl, [space_word+esi]
+	cmp dl, 0
+	je L3 
+	inc esi
+	cmp ecx, 1 ;마지막까지 다 맞췄었다면  (1로둔이유는 ecx=0이 되면 loop를 다시 반복하지 않게되기때문임)
+	je win
+	loop check_all
 
 lose:
     mwrite <"                     ##############################################",0ah>
@@ -1306,34 +1306,34 @@ mov ebp,esp
 	jz Life0
 
 Life6:            ;목숨이 6개 일때
-      call stick
-      Jmp exit1
+    call stick
+    Jmp exit1
 
 Life5:            ;목숨이 5개 일때
-      call head
-      Jmp exit1
+    call head
+    Jmp exit1
 
 Life4:            ;목숨이 4개 일때
-      call body
-      Jmp exit1
+    call body
+    Jmp exit1
 
 Life3:            ;목숨이 3개 일때
-      call leftarm
-      Jmp exit1
+    call leftarm
+    Jmp exit1
 
 Life2:            ;목숨이 2개 일때
-      call rightarm
-      Jmp exit1
+    call rightarm
+    Jmp exit1
 
 Life1:            ;목숨이 1개 일때
-      call leftleg
-      Jmp exit1
+    call leftleg
+    Jmp exit1
 
 Life0:            ;목숨이 0개 일때
-      call rightleg
-      ;sleep
-      ;call die
-      Jmp exit1
+    call rightleg
+    ;sleep
+    ;call die
+    Jmp exit1
 
 exit1:
 
