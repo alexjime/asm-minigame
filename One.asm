@@ -147,24 +147,24 @@ ReInput:
 	jz choose_four
 
 Re_Choose1:
-   mWrite < "1 ~ 4 사이에서만 골라주세요. ",0ah>
-   jmp ReInput
+	mWrite < "1 ~ 4 사이에서만 골라주세요. ",0ah>
+	jmp ReInput
 
 choose_one:
-   call Run_RSP   ; 가위바위보 게임 실행
-   jmp ReStart
+	call Run_RSP   ; 가위바위보 게임 실행
+	jmp ReStart
 
 choose_two:
-   call Run_HangMan   ; 행맨 게임 실행
-   jmp ReStart
+	call Run_HangMan   ; 행맨 게임 실행
+	jmp ReStart
 
 choose_three:
-   call Print_Made_by   ; 만든사람 정보 출력
-   jmp ReStart
+	call Print_Made_by   ; 만든사람 정보 출력
+	jmp ReStart
 
 choose_four:
-   mWrite < "Bye~~!",0ah>
-   exit    ; 프로그램 종료
+	mWrite < "Bye~~!",0ah>
+	exit    ; 프로그램 종료
 
 ret
 Choose_Menu ENDP
