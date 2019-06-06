@@ -793,10 +793,173 @@ L2_ok : ; 해당 자리에 입력한 문자가 일치할 경우
 	ret
 	rightleg ENDP
 
-	; 승리출력 프로시저
-	victory PROC
-	push ebp
-	mov ebp, esp
+; Dead 프로시저
+Dead PROC
+push ebp
+mov ebp,esp
+
+Scean1:
+	mWrite < "                                                                                      ",0ah>
+	mWrite < "                                                                                      ",0ah>
+	mWrite < "                     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*                       ",0ah>
+	mWrite < "                     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*                       ",0ah>
+	mWrite < "                     @@@@=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~:@*                       ",0ah>
+	mWrite < "                     @@@@!                                   @*                       ",0ah>
+	mWrite < "                     @@@@!                                   @*                       ",0ah>
+	mWrite < "                     @@@@!                                   @*                       ",0ah>
+	mWrite < "                     @@@@!                                   @*                       ",0ah>
+	mWrite < "                     @@@@!                                 ;@@@#!                     ",0ah>
+	mWrite < "                     @@@@!                              -#=,    .*@~                  ",0ah>
+	mWrite < "                     @@@@!                             -$,        ,*:                 ",0ah>
+	mWrite < "                     @@@@!                             $-  --  --  ,=                 ",0ah>
+	mWrite < "                     @@@@!                            *!            ;!                ",0ah>
+	mWrite < "                     @@@@!                             #.    O     .=.                ",0ah>
+	mWrite < "                     @@@@!                             :*.        .;;        .        ",0ah>
+	mWrite < "                     @@@@!                    :!,       ;*!,    .;=;.      ~*~        ",0ah>
+	mWrite < "                     @@@@!                     ~#!        .*####*.      .*#,          ",0ah>
+	mWrite < "                     @@@@!                      .=$~         *~        ,$!            ",0ah>
+	mWrite < "                     @@@@!                        -**:       *~      ,*!~             ",0ah>
+	mWrite < "                     @@@@!                          .#=.     *~     !#:               ",0ah>
+	mWrite < "                     @@@@!                            :#~.   *~   ,=$.                ",0ah>
+	mWrite < "                     @@@@!                             ,!=;  *~ .;=~                  ",0ah>
+	mWrite < "                     @@@@!                               ,=$-*~~#:.                   ",0ah>
+	mWrite < "                     @@@@!                                 ,#@$$-                     ",0ah>
+	mWrite < "                     @@@@!                                  ,$=.                      ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *#-                      ",0ah>
+	mWrite < "                     @@@@!                                .-*=!$:.                    ",0ah>
+	mWrite < "                     @@@@!                               ~=*~  ,*=-                   ",0ah>
+	mWrite < "                     @@@@!                             ~$=-      -#;                  ",0ah>
+	mWrite < "                     @@@@!                           ,*$:         .*$,                ",0ah>
+	mWrite < "                     @@@@!                         -**:.            ;=;               ",0ah>
+	mWrite < "                     @@@@!                       -==-.               ,*$-             ",0ah>
+	mWrite < "                     @@@@!                     ,*#~                    :#;            ",0ah>
+	mWrite < "                     @@@@!                    ,*~                       ,!=           ",0ah>
+	mWrite < "                     @@@@!                                                            ",0ah>
+	mWrite < "                     @@@@!                                                            ",0ah>
+	mWrite < "                     @@@@*                                                            ",0ah>
+	mWrite < ":@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,",0ah>
+	mWrite < ":@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,",0ah>
+	mWrite < " ",0ah>
+	invoke sleep, 100h
+	call clrscr
+
+Scean2:
+	mWrite < "                                                                                      ",0ah>
+	mWrite < "                                                                                      ",0ah>
+	mWrite < "                     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*                       ",0ah>
+	mWrite < "                     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*                       ",0ah>
+	mWrite < "                     @@@@=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~:@*                       ",0ah>
+	mWrite < "                     @@@@!                                   @*                       ",0ah>
+	mWrite < "                     @@@@!                                   @*                       ",0ah>
+	mWrite < "                     @@@@!                                   @*                       ",0ah>
+	mWrite < "                     @@@@!                                   @*                       ",0ah>
+	mWrite < "                     @@@@!                                 ;@@@#!                     ",0ah>
+	mWrite < "                     @@@@!                              -#=,    .*@~                  ",0ah>
+	mWrite < "                     @@@@!                             -$,        ,*:                 ",0ah>
+	mWrite < "                     @@@@!                             $-  --  --  ,=                 ",0ah>
+	mWrite < "                     @@@@!                            *!            ;!                ",0ah>
+	mWrite < "                     @@@@!                             #.    --    .=.                ",0ah>
+	mWrite < "                     @@@@!                             :*.        .;;                 ",0ah>
+	mWrite < "                     @@@@!                              ;*!,    .;=;.                 ",0ah>
+	mWrite < "                     @@@@!                                .*####*.                    ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *=                       ",0ah>
+	mWrite < "                     @@@@!              ============================================  ",0ah>
+	mWrite < "                     @@@@!                                   *=                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *#-                      ",0ah>
+	mWrite < "                     @@@@!                                .-*=!$:.                    ",0ah>
+	mWrite < "                     @@@@!                               ~=*~  ,*=-                   ",0ah>
+	mWrite < "                     @@@@!                             ~$=-      -#;                  ",0ah>
+	mWrite < "                     @@@@!                           ,*$:         .*$,                ",0ah>
+	mWrite < "                     @@@@!                         -**:.            ;=;               ",0ah>
+	mWrite < "                     @@@@!                       -==-.               ,*$-             ",0ah>
+	mWrite < "                     @@@@!                     ,*#~                    :#;            ",0ah>
+	mWrite < "                     @@@@!                    ,*~                       ,!=           ",0ah>
+	mWrite < "                     @@@@!                                                            ",0ah>
+	mWrite < "                     @@@@!                                                            ",0ah>
+	mWrite < "                     @@@@*                                                            ",0ah>
+	mWrite < ":@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,",0ah>
+	mWrite < ":@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,",0ah>
+	mWrite < " ",0ah>
+	invoke sleep, 100h
+	call clrscr
+
+Scean3:
+	mWrite < "                                                                                      ",0ah>
+	mWrite < "                                                                                      ",0ah>
+	mWrite < "                     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*                       ",0ah>
+	mWrite < "                     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*                       ",0ah>
+	mWrite < "                     @@@@=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~:@*                       ",0ah>
+	mWrite < "                     @@@@!                                   @*                       ",0ah>
+	mWrite < "                     @@@@!                                   @*                       ",0ah>
+	mWrite < "                     @@@@!                                   @*                       ",0ah>
+	mWrite < "                     @@@@!                                   @*                       ",0ah>
+	mWrite < "                     @@@@!                                 ;@@@#!                     ",0ah>
+	mWrite < "                     @@@@!                              -#=,    .*@~                  ",0ah>
+	mWrite < "                     @@@@!                             -$,        ,*:                 ",0ah>
+	mWrite < "                     @@@@!                             $-  X   X   ,=                 ",0ah>
+	mWrite < "                     @@@@!                            *!            ;!                ",0ah>
+	mWrite < "                     @@@@!                             #.    __    .=.                ",0ah>
+	mWrite < "                     @@@@!                             :*.        .;;                 ",0ah>
+	mWrite < "                     @@@@!                              ;*!,    .;=;.                 ",0ah>
+	mWrite < "                     @@@@!                                .*####*.                    ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                   *~                       ",0ah>
+	mWrite < "                     @@@@!                                  -*~                       ",0ah>
+	mWrite < "                     @@@@!                                 ,#@$$-                     ",0ah>
+	mWrite < "                     @@@@!                                ,=$$=.~#:.                  ",0ah>
+	mWrite < "                     @@@@!                              ,!=; *~ .;=~                  ",0ah>
+	mWrite < "                     @@@@!                             :#~.  *~   ,=$.                ",0ah>
+	mWrite < "                     @@@@!                           .#=.    *~     !#:               ",0ah>
+	mWrite < "                     @@@@!                          -**:     *~      ,*!~             ",0ah>
+	mWrite < "                     @@@@!                        .=$~       *~        ,$!            ",0ah>
+	mWrite < "                     @@@@!                       ~#!         *~         .*#,          ",0ah>
+	mWrite < "                     @@@@!                      :!,          *~           ~*~         ",0ah>
+	mWrite < "                     @@@@!                                   *#-                      ",0ah>
+	mWrite < "                     @@@@!                                .-*=!$:.                    ",0ah>
+	mWrite < "                     @@@@!                               ~=*~  ,*=-                   ",0ah>
+	mWrite < "                     @@@@!                             ~$=-      -#;                  ",0ah>
+	mWrite < "                     @@@@!                           ,*$:         .*$,                ",0ah>
+	mWrite < "                     @@@@!                         -**:.            ;=;               ",0ah>
+	mWrite < "                     @@@@!                       -==-.               ,*$-             ",0ah>
+	mWrite < "                     @@@@!                     ,*#~                    :#;            ",0ah>
+	mWrite < "                     @@@@!                    ,*~                       ,!=           ",0ah>
+	mWrite < "                     @@@@!                                                            ",0ah>
+	mWrite < "                     @@@@!                                                            ",0ah>
+	mWrite < "                     @@@@*                                                            ",0ah>
+	mWrite < ":@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,",0ah>
+	mWrite < ":@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,",0ah>
+	mWrite < " ",0ah>
+
+pop ebp
+ret
+Dead ENDP
+
+; 승리출력 프로시저
+victory PROC
+push ebp
+mov ebp, esp
 
 	mWrite < "   ■       ■ ■■■■ ■■■■ ■■■■ ■■■■ ■■■■ ■    ■ ", 0ah>
 	mWrite < "    ■     ■     ■    ■          ■    ■    ■ ■    ■  ■  ■  ", 0ah>
@@ -845,55 +1008,55 @@ L2_ok : ; 해당 자리에 입력한 문자가 일치할 경우
 	mWrite < "                        ::                          .@               ", 0ah>
 	mWrite < " ", 0ah>
 
-	pop ebp
-	ret
-	victory ENDP
+pop ebp
+ret
+victory ENDP
 
-	; 행맨출력 프로시저
-	P_Hangman PROC
-	push ebp
-	mov ebp, esp
+; 행맨출력 프로시저
+P_Hangman PROC
+push ebp
+mov ebp, esp
 
-	mov eax, life; 목숨 개수를 eax에 저장
-	cmp eax, 6
-	jz Life6
-	cmp eax, 5
-	jz Life5
-	cmp eax, 4
-	jz Life4
-	cmp eax, 3
-	jz Life3
-	cmp eax, 2
-	jz Life2
-	cmp eax, 1
-	jz Life1
-	cmp eax, 0
-	jz Life0
+mov eax, life; 목숨 개수를 eax에 저장
+cmp eax, 6
+jz Life6
+cmp eax, 5
+jz Life5
+cmp eax, 4
+jz Life4
+cmp eax, 3
+jz Life3
+cmp eax, 2
+jz Life2
+cmp eax, 1
+jz Life1
+cmp eax, 0
+jz Life0
 
-	Life6 : ; 목숨이 6개 일때
+Life6 : ; 목숨이 6개 일때
 	call stick
 	Jmp exit1
-	Life5 : ; 목숨이 5개 일때
+Life5 : ; 목숨이 5개 일때
 	call head
 	Jmp exit1
-	Life4 : ; 목숨이 4개 일때
+Life4 : ; 목숨이 4개 일때
 	call body
 	Jmp exit1
-	Life3 : ; 목숨이 3개 일때
+Life3 : ; 목숨이 3개 일때
 	call leftarm
 	Jmp exit1
-	Life2 : ; 목숨이 2개 일때
+Life2 : ; 목숨이 2개 일때
 	call rightarm
 	Jmp exit1
-	Life1 : ; 목숨이 1개 일때
+Life1 : ; 목숨이 1개 일때
 	call leftleg
 	Jmp exit1
-	Life0 : ; 목숨이 0개 일때
-	call rightleg
-	; sleep
-	; call die
-	Jmp exit1
-	exit1 :
+Life0 : ; 목숨이 0개 일때
+      call rightleg
+      invoke sleep, 100h
+      call Dead
+      Jmp exit1
+exit1 :
 pop ebp
 ret
 P_Hangman ENDP
