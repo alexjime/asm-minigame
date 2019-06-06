@@ -527,18 +527,13 @@ mov ebp,esp
    mov edx, OFFSET Random_Word
    mov ecx, word_length
    dec ecx     ; 이유는 잘 모르겠지만 단어의 길이에서 1을 빼주고 하면 된다.
-   ;call DumpRegs ;check 
 
 L1:                           ; Random_Word 배열에 단어를 저장하는 루프
    mov eax, [ebx]
    mov [edx], eax
    inc ebx
    inc edx
-   ;call DumpRegs ;check 
    loop L1
-
-   mov edx, OFFSET Random_Word
-   call WriteString
 
 pop ebp
 ret
@@ -549,16 +544,15 @@ push ebp
 mov ebp,esp
 
    mov edx, OFFSET File_value_array
-   ;call DumpRegs ; check
    mov ebx, 0
-   mov ecx, LENGTHOF File_value_array ; 1000번 루프
+   mov ecx, LENGTHOF File_value_array ; 1000 loop
 
 L1:  ; 루프 1 ; 파일에서 널값을 찾을 때 까지 반복
    mov eax, [edx]
-   add ebx, TYPE File_value_array  
+   add ebx, TYPE File_value_array
    cmp eax, 0
-   je Find_Zero      ; 루프 탈출
-   add edx, TYPE File_value_array 
+   je Find_Zero      ; Escape loop
+   add edx, TYPE File_value_array
    loop L1
 
 Find_Zero:  
@@ -818,7 +812,7 @@ pop ebp
 ret 
 IS_CORRECT ENDP
 
-; procedure that print pillar
+; Procedure that print pillar
 stick PROC
 push ebp
 mov ebp,esp
@@ -876,7 +870,7 @@ pop ebp
 ret
 stick ENDP
 
-; procedure that print head
+; Procedure that print head
 head PROC
 push ebp
 mov ebp,esp
@@ -934,7 +928,7 @@ pop ebp
 ret
 head ENDP
 
-; procedure that print body
+; Procedure that print body
 body PROC
 push ebp
 mov ebp,esp
@@ -992,7 +986,7 @@ pop ebp
 ret
 body ENDP
 
-; procedure that print left arm
+; Procedure that print left arm
 leftarm PROC
 push ebp
 mov ebp,esp
@@ -1050,7 +1044,7 @@ pop ebp
 ret
 leftarm ENDP
 
-; procedure that print right arm
+; Procedure that print right arm
 rightarm PROC
 push ebp
 mov ebp,esp
@@ -1108,7 +1102,7 @@ pop ebp
 ret
 rightarm ENDP
 
-; procedure that print left leg
+; Procedure that print left leg
 leftleg PROC
 push ebp
 mov ebp,esp
@@ -1166,7 +1160,7 @@ pop ebp
 ret
 leftleg ENDP
 
-; procedure that print right leg
+; Procedure that print right leg
 rightleg PROC
 push ebp
 mov ebp,esp
@@ -1507,7 +1501,7 @@ Run_HangMan PROC
 push ebp
 mov ebp,esp
 
-   ;console size set
+   ; console size set
    invoke GetStdHandle, STD_OUTPUT_HANDLE
    mov outHandle,eax
    invoke SetConsoleWindowInfo,outHandle,TRUE,ADDR windowRect2
@@ -1515,10 +1509,10 @@ mov ebp,esp
    invoke Sleep,750h
    call clrscr
 Hangman:
-   mov Replay, 0 ;Initialize "restart variable (Replay)"
+   mov Replay, 0 ; Initialize "restart variable (Replay)"
    call Randomize ; 프로시저 시작 시드 값 초기화
 
-   ; 읽어올 단어장 파일 랜덤으로 고르기
+   ; Select word list file in randomly
    mov Random_Parameter, 5 ; Set_Random_Value를 위한 인자값 설정 1 ~ 5
    call Set_Random_Value
 
