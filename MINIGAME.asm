@@ -1,4 +1,4 @@
-TITLE START_GAME.asm
+TITLE MINIGAME.asm
 INCLUDE Irvine32.inc
 INCLUDE macros.inc
 
@@ -12,17 +12,17 @@ randVal DWORD ? ; Computer's choice
 choice DWORD ?  ; Player's choice
 counter DWORD ? ; Counter of win in a row
 
-;################### 묵찌빠 #########################
+;###################### MOCK - JJI - PPA ############################
 winner_flag DWORD 2 ; If flag is 0, computer's win. And If this flag is 1, player's win. Last Start flag is 2.
 ad_count DWORD 0 ; How much attack/defence give and take count.
 
 ;####################### Hangman variables ##########################
 
 ; *** File I/O  *** 
-Random_Parameter DWORD 0 ; 랜덤값 인자
-set_File DWORD 0         ; 파일을 설정할 랜덤 값
-set_Word DWORD 0         ; 단어를 고를 랜덤 값
-FileName DWORD 0         ; 읽어와야 하는 파일명의 오프셋
+Random_Parameter DWORD 0 ; Random value parameter
+set_File DWORD 0         ; Random value for setting file 
+set_Word DWORD 0         ; Random value for choosing word
+FileName DWORD 0         ; File OFFSET that is have to read 
 
 four_words BYTE "4words.txt",0
 five_words BYTE "5words.txt",0
@@ -35,37 +35,43 @@ File_value_array_Size DWORD 1000  ; File Max Size
 
 handler DWORD ?
 
-Choose_file_param DWORD 0 ; 파일 고르기 함수 인자
-File_length DWORD 0       ; 배열의 알파벳 수 저장
+Choose_file_param DWORD 0 ; choice file parameter
+File_length DWORD 0       ; store number of alphabet of array 
 
-; Find_Zero함수에서 사용
-find_zero_offset DWORD 0 ; 0을 찾은 곳의 offset을 저장
-find_zero_length DWORD 0 ; 0을 찾은 까지의 길이를 저장
+; Find_Zero PROC
+find_zero_offset DWORD 0  ; store OFFSET that is File EOF(0 = Null)
+find_zero_length DWORD 0  ; store lenght of File EOF 
 
-; *** Game backend *** 
+; Game sidebar elements 
 life DWORD 6
-word_length DWORD 0         ; 단어의 길이
-Random_Word BYTE 100 DUP(0) ; 랜덤으로 골라진 단어(맞춰야할 단어)
-Wrong_Alpha BYTE 6 DUP(0)   ; 틀린단어 (6개까지 틀릴수 있음)
-Space_Word BYTE 8 DUP(0)    ; 매치된 단어가 들어갈 곳(처음엔 빈 단어)
+word_length DWORD 0         ; length of Random_word
+Random_Word BYTE 100 DUP(0) ; word that User have to match for game clear
+Wrong_Alpha BYTE 6 DUP(0)   ; wrong word that user input (MAX : 6)
+Space_Word BYTE 8 DUP(0)    ; Matched words storage 
 
-;init values
-init_Random_Word BYTE SIZEOF Random_Word DUP(0) ; Random_Word 변수 초기화 때 사용할 것
-init_Wrong_Alpha BYTE SIZEOF Wrong_Alpha DUP(0)   ; Wrong_Alpha 변수 초기화 때 사용할 것
-init_Space_Word BYTE SIZEOF Space_Word DUP(0)    ; Space_Word 변수 초기화 때 사용할 것
+; init values
+init_Random_Word BYTE SIZEOF Random_Word DUP(0) ; Random_Word init
+init_Wrong_Alpha BYTE SIZEOF Wrong_Alpha DUP(0)   ; Wrong_Alpha init
+init_Space_Word BYTE SIZEOF Space_Word DUP(0)    ; Space_Word init
 
-Input_Alpha BYTE 0          ; 입력한 알파벳
-Match_Alpha BYTE 0          ; 매치되는 알파벳 
-Replay DWORD 0              ; replay 변수 (아직 미구현)
-tempebx DWORD 0             ; ebx 임시저장소 
+; back-end variables
+Input_Alpha BYTE 0          ; User input alphabet 
+Match_Alpha BYTE 0          ; Matched alphabet with Random_Word  
+Replay DWORD 0              ; replay 
+tempebx DWORD 0             ; temporary save ebx   
 
 ; console size
 outHandle HANDLE 0
-windowRect1 SMALL_RECT <0,0,55,50> ;RSP CONSOLE SET
+windowRect0 SMALL_RECT <0,0,105,30> ;MainScreen CONSOLE SET
+windowRect1 SMALL_RECT <0,0,55,50> ;RSP,MSP CONSOLE SET
 windowRect2 SMALL_RECT <0,0,90,55> ;HANGMAN CONSOLE SET
 
 .code
 Print_Start PROC ; MainScreen
+   ;console size set
+   invoke GetStdHandle, STD_OUTPUT_HANDLE
+   mov outHandle,eax
+   invoke SetConsoleWindowInfo,outHandle,TRUE,ADDR windowRect0
    mWrite < "==========================================================================================================",0ah>
    mWrite < "==========================================================================================================",0ah>
    mWrite < "   ■      ■      ■   ■■■■■   ■         ■■■■   ■■■■■       ■      ■       ■■■■■   ",0ah>
@@ -74,21 +80,21 @@ Print_Start PROC ; MainScreen
    mWrite < "      ■■    ■■      ■           ■         ■         ■      ■    ■    ■■    ■    ■           ",0ah>
    mWrite < "       ■      ■       ■■■■■   ■■■■   ■■■■   ■■■■■   ■      ■      ■   ■■■■■   ",0ah>
    mWrite < "==========================================================================================================",0ah>
-   invoke sleep, 250h
+   invoke sleep, 350h
 ret
 Print_Start ENDP
 
 Print_Menu PROC ; MainScreen
    mWrite < "==========================================================================================================",0ah>
-   mWrite < "                    Mini Game                                                ",0ah>
+   mWrite < "                                                 Mini Game                                                ",0ah>
    mWrite < "==========================================================================================================",0ah>
-   mWrite < "                    Game Menu                                                ",0ah>
+   mWrite < "                                                 Game Menu                                                ",0ah>
    mWrite < "==========================================================================================================",0ah>
-   mWrite < "                 1. Rock Scissors Paper                                         ",0ah>
-   mWrite < "                 2. Hang Man                                                    ",0ah>
-   mWrite < "                 3. MOCK - JJI - PPA                                            ",0ah>
-   mWrite < "                 4. Made by                                                     ",0ah>
-   mWrite < "                 5. exit                                                        ",0ah>
+   mWrite < "                                           1. Rock Scissors Paper                                         ",0ah>
+   mWrite < "                                           2. Hang Man                                                    ",0ah>
+   mWrite < "                                           3. MOCK - JJI - PPA                                            ",0ah>
+   mWrite < "                                           4. Made by                                                     ",0ah>
+   mWrite < "                                           5. exit                                                        ",0ah>
    mWrite < "==========================================================================================================",0ah>
 ret
 Print_Menu ENDP
@@ -97,17 +103,17 @@ Print_Made_by PROC
 Wait_N:
    call clrscr   ; 화면 클리어
    mWrite < "==========================================================================================================",0ah>
-   mWrite < "                    Made By                                                ",0ah>
+   mWrite < "                                                   Made By                                                ",0ah>
    mWrite < "==========================================================================================================",0ah>
-   mWrite < "                    16_지민수                                                ",0ah>
-   mWrite < "                    18_박재광                                                ",0ah>
-   mWrite < "                    18_유태현                                                ",0ah>
-   mWrite < "                    18_홍택균                                                ",0ah>
+   mWrite < "                                                 16_지민수(hungry-shark)                                   ",0ah>
+   mWrite < "                                                 18_박재광(Whitec01a)                                      ",0ah>
+   mWrite < "                                                 18_유태현(em9xdm)                                         ",0ah>
+   mWrite < "                                                 18_홍택균(OZ1NG)                                          ",0ah>
    mWrite < "==========================================================================================================",0ah>
 
 RE_Chos:
-   mWrite < "다시 돌아가시겠습니까?(Y/N) : ", 0ah>
-   call ReadChar   ; Y/N 입력받음
+   mWrite < "Do you want to go back? (Y/N) : ", 0ah>
+   call ReadChar   
    mov print_made_by_input, al 
    cmp print_made_by_input, "Y"
    jz Return_main
@@ -125,7 +131,7 @@ Print_Made_by ENDP
 
 Choose_Menu PROC
 ReStart:
-   call clrscr ; 화면 클리어
+   call clrscr ; clear screen 
    call Print_Menu
 
 ReInput:
@@ -148,7 +154,7 @@ ReInput:
    jz choose_five
 
 Re_Choose1:
-   mWrite < "1 ~ 5 사이에서만 골라주세요. ",0ah>
+   mWrite < "You choose only 1 ~ 5. plz re-input",0ah>
    jmp ReInput
 
 choose_one:
@@ -175,17 +181,17 @@ ret
 Choose_Menu ENDP
 
 ;~~~~~~~~~~~~~~~~~~~~~~~~ Rock-Scissors-Paper Area ~~~~~~~~~~~~~~~~~~~~~~~~ 
-Run_RSP PROC
+Run_RSP PROC ; RSP Start
 push ebp
 mov ebp, esp
-
+   
+   mWrite < "            Running_Rock-Scissors-Paper~~",0ah>
+   invoke Sleep,750h
    ;console size set
    invoke GetStdHandle, STD_OUTPUT_HANDLE
    mov outHandle, eax
    invoke SetConsoleWindowInfo,outHandle, TRUE, ADDR windowRect1
-   
-   mWrite < "            Running_Rock-Scissors-Paper~~",0ah>
-   invoke Sleep,750h
+
    call Randomize ; Seed set
 
 RSP_main:
@@ -214,7 +220,7 @@ RSP_win:
    cmp eax,-2 
    je RSP_lose         ; if true -> lose
    
-   mWrite <"Player Win! '3'",0ah>
+   mWrite <"Player Win! ('3')",0ah>
    inc counter     ; Win Counter increase
 
    ; switch depends on what you choice
@@ -312,8 +318,8 @@ RSP_P_lose: ; When player lose by Paper
    jmp RE_RSP
 
 RE_RSP:
-   mWrite < "한 게임 더 하시겠습니까?? (Y/N) : ", 0ah>
-   call ReadChar   ; Y/N 입력받음
+   mWrite < "One more game? (Y/N) : ", 0ah>
+   call ReadChar   
    mov print_made_by_input, al 
    cmp print_made_by_input, "Y"
    jz Run_RSP
@@ -464,30 +470,29 @@ P_PRINT ENDP
 
 
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~ Hangman Area ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
-Set_Random_Value PROC   ; 인자 변수 : Random_Parameter, 반환값 : eax 레지스터
+Set_Random_Value PROC   ; Parameter : Random_Parameter , return : eax
 push ebp
 mov ebp,esp
 
-   ; 랜덤 값을 고르는 프로시저
+   ; Create Random value
    mov eax, Random_Parameter
-   call RandomRange
-   inc eax           ; 1 더해줘서 1 ~ Random_Parameter 까지의 범위가 골라지도록 함. ; 리턴 값
-   ;call DumpRegs
+   call RandomRange  ; return eax
+   inc eax           ; range of 1 ~ Random_Parameter 
 
 pop ebp
 ret
 Set_random_Value ENDP
 
 
-Read_File PROC ; 인자 : FileName(오프셋), 리턴 : File_value_array에 파일의 내용 저장
+Read_File PROC ; Parameter : OFFSET FileName , return : Store readed words to File_value_array
 push ebp
 mov ebp,esp
 
    mov edx, FileName
    call OpenInputFile
-   mov handler, eax ; 핸들러 저장
+   mov handler, eax ; store handler
    
-   ; 파일 읽어오기 
+   ; read file
    mov eax, handler 
    mov edx, OFFSET File_value_array
    mov ecx, File_value_array_Size
@@ -498,7 +503,7 @@ ret
 Read_File ENDP
 
 
-Choose_File PROC ; 인자 : Choose_file_param, 리턴 값 : FileName( offset 임. ), Read_File 프로시저를 통해 File_value_array에 단어들 저장
+Choose_File PROC ; Parameter : Choose_file_param , return : OFFSET FileName, Store readed words to File_value_array by Read_File PROC 
 push ebp
 mov ebp,esp
 
@@ -512,31 +517,31 @@ mov ebp,esp
 	je J4
 	cmp eax, 5
 	je J5
-J1:				; 점프 1, 길이 5의 단어장
+J1:				; Word lenght 5 file
 	mov FileName, OFFSET five_words
-	call Read_File	; File_value_array에 단어들 저장
+	call Read_File	; Store readed words to File_value_array
 	mov word_length, 5
 	jmp J6
 
-J2:				; 점프 2, 길이 6의 단어장
+J2:				; Word lenght 6 file
 	mov FileName, OFFSET six_words
-	call Read_File	; File_value_array에 단어들 저장
+	call Read_File	; Store readed words to File_value_array
 	mov word_length, 6
 	jmp J6
 
-J3:				; 점프 3, 길이 7의 단어장
+J3:				; Word lenght 7 file
 	mov FileName, OFFSET seven_words
-	call Read_File	; File_value_array에 단어들 저장
+	call Read_File	; Store readed words to File_value_array
 	mov word_length, 7
 	jmp J6
-J4:				; 점프 4, 길이 8의 단어장
+J4:				; Word lenght 8 file
 	mov FileName, OFFSET eight_words
-	call Read_File	; File_value_array에 단어들 저장
+	call Read_File	; Store readed words to File_value_array
 	mov word_length, 8
 	jmp J6
-J5:				; 점프 5, 길이 4의 단어장
+J5:				; Word lenght 4 file
 	mov FileName, OFFSET four_words
-	call Read_File	; File_value_array에 단어들 저장
+	call Read_File	; Store Readed words to File_value_array
 	mov word_length, 4
 	jmp J6	
 	J6:
@@ -545,80 +550,69 @@ ret
 Choose_File ENDP
 
 
-Choose_Word PROC ; 인자 : FileName , 리턴 : Random_Word 배열
+Choose_Word PROC ; Parameter : FileName , return : Random_Word[] 
 push ebp
 mov ebp,esp
 
    ;mov eax, FIleName ; Offset 저장
-   mov File_length, LENGTHOF File_value_array
-   ; mov eax, File_length
-   ; call DumpRegs ;check
+   mov File_length, LENGTHOF File_value_array 
    call Find_File_Length
-   ; 랜덤으로 단어 고르기
+
+   ; Random choice word
    mov eax, find_zero_length
-   ; call DumpRegs; check
-   call RandomRange ; 리턴 : eax
+   call RandomRange ; return eax
    ; mov eax, find_zero_length 이거 넣으면 총 단어의 개수를 구해주고 이걸 빼면 랜덤으로 단어를 고를 수 있게 됨
    mov ecx, word_length
-   ; call DumpRegs ; check
-   add ecx, 2  ; 개행은 2byte 크기이기 때문에 한 줄의 바이트를 word_length+2로 계산
-   mov edx, 0  ; div를 사용하면 나머지가 edx에 저장이 되기 때문에 edx의 값을 0으로 초기화 해주어야 함
-   ;call DumpRegs ;check
-   div ecx           ; 몫 : eax에 저장, 나머지 : edx에 저장 ; 각 파일의 총 단어 개수
-   ;call DumpRegs ;check
+   add ecx, 2  ; *.txt's Newline is 2byte. so calculate word_length+2 at each line
+   mov edx, 0  ; 'div' use edx as Remainder. so init 0 
+   div ecx     ; 'div' store quotient to eax. ecx means number of words in reading file 
    
-   ; call DumpRegs; check
    mov ebx, word_length
-   add ebx, 2 ; 개행은 2byte 크기이기 때문에 한 줄의 바이트를 word_length+2로 계산
-   mul ebx ; eax * ebx , 몫 : eax
-   ;mov ebx, eax
+   add ebx, 2  ; *.txt's Newline is 2byte. so calculate word_length+2 at each line
+   mul ebx     ; eax * ebx , quotient : eax
    
    ;고른 단어 출력
    mov ebx, OFFSET File_value_array
-   add ebx, eax      ; 랜덤 범위 만큼 더함
+   add ebx, eax      ; +Random range
    mov edx, OFFSET Random_Word
    mov ecx, word_length
-   dec ecx     ; 이유는 잘 모르겠지만 단어의 길이에서 1을 빼주고 하면 된다.
-   ;call DumpRegs ;check 
+   dec ecx           ; 이유는 잘 모르겠지만 단어의 길이에서 1을 빼주고 하면 된다.
 
 L1:                           ; Random_Word 배열에 단어를 저장하는 루프
    mov eax, [ebx]
    mov [edx], eax
    inc ebx
    inc edx
-   ;call DumpRegs ;check 
    loop L1
 
-   ;check
-   mov edx, OFFSET Random_Word
-   call WriteString
+   ;check what word is readed.
+   ;mov edx, OFFSET Random_Word
+   ;call WriteString
 
 pop ebp
 ret
 Choose_Word ENDP
 
 
-Find_File_Length PROC ; 리턴 : find_zero_offset, find_zero_length
+Find_File_Length PROC ; return : find_zero_offset, find_zero_length
 push ebp
 mov ebp,esp
 
    mov edx, OFFSET File_value_array
-   ;call DumpRegs ; check
    mov ebx, 0
-   mov ecx, LENGTHOF File_value_array ; 1000번 루프
+   mov ecx, LENGTHOF File_value_array ; MAX 1000
 
-L1:  ; 루프 1 ; 파일에서 널값을 찾을 때 까지 반복
+Find_EOF:  ; loop until finding Null
    mov eax, [edx]
    add ebx, TYPE File_value_array  
    cmp eax, 0
-   je Find_Zero      ; 루프 탈출
+   je Find_Zero      ; break Find_EOF
    add edx, TYPE File_value_array 
-   loop L1
+   loop Find_EOF
 
 Find_Zero:  
    mov find_zero_offset, edx
    mov find_zero_length, ebx
-   ; call DumpRegs ; check
 
 pop ebp
 ret
@@ -653,8 +647,8 @@ is_exist:
    jmp pm_end
 
 not_exist: 
-   mWrite "   " ;공백 출력
-   inc esi ;인덱스 증가
+   mWrite "   " ; Print space cause not correct
+   inc esi ; next index
    loop is_exist
    jmp pm_end
 
@@ -665,7 +659,7 @@ pop ebp
 ret
 PRINT_MATCHED ENDP
 
-PRINT_UNDERBAR PROC ; show underbar until now 
+PRINT_UNDERBAR PROC ; show underbar
 push ebp
 mov ebp,esp
    
@@ -760,7 +754,7 @@ check_all: ; Check all alpha of space_word
    cmp dl, 0
    je ic_end
    inc esi
-   cmp ecx, 1 ; 마지막까지 다 맞췄었다면  (1로 둔 이유는 ecx=0이 되면 loop를 다시 반복하지 않게되기때문임)
+   cmp ecx, 1 ; if user correct word until last alpha (1로 둔 이유는 ecx=0이 되면 loop를 다시 반복하지 않게되기때문임)
    je win
    loop check_all
 
@@ -785,8 +779,8 @@ win: ; All matched alpha.
   jmp RE_Hang
   
 RE_Hang:
-   mWrite < "한 게임 더 하시겠습니까?? (Y/N) : ", 0ah>
-   call ReadChar   ; Y/N 입력받음
+   mWrite < "One more play? (Y/N) : ", 0ah>
+   call ReadChar   
    mov print_made_by_input, al 
    cmp print_made_by_input, "Y"
    jz Run_HangMan
@@ -870,23 +864,20 @@ all_no: ; There's nothing matched alpha
    inc ebx                  ; increase ebx
    mov tempebx, ebx         ; save ebx
 
-isc_end: ;공통
-   call PRINT_MATCHED     ;현재까지 맞춘 알파벳 출력
-   call PRINT_UNDERBAR    ;언더바 출력
-   call PRINT_WRONG_ALPHA ;현재까지 틀린 알파벳 출력
-   call PRINT_LIFE        ;남은 목숨 출력
-   call PRINT_Hangman         ;행맨출력
-   call IS_CLEAR          ;클리어 여부 확인
-   call crlf
-   call crlf
+isc_end: ;IS_CORRECT end
+   call PRINT_MATCHED     ; show matched alpha until now 
+   call PRINT_UNDERBAR    ; show underbar 
+   call PRINT_WRONG_ALPHA ; show wrong alpha until now 
+   call PRINT_LIFE        ; show life on now 
+   call PRINT_Hangman     ; show HangMan 
+   call IS_CLEAR          ; Game Clear or User dead check
    call crlf
 
 pop ebp
 ret 
 IS_CORRECT ENDP
-
-; 기둥출력 프로시저
-stick PROC
+;==========================================================================
+stick PROC ; When fist input 
 push ebp
 mov ebp,esp
 
@@ -943,8 +934,7 @@ pop ebp
 ret
 stick ENDP
 
-; 머리출력 프로시저
-head PROC
+head PROC ; wrong count 1
 push ebp
 mov ebp,esp
 
@@ -1001,8 +991,7 @@ pop ebp
 ret
 head ENDP
 
-; 몸통출력 프로시저
-body PROC
+body PROC ; wrong count 2
 push ebp
 mov ebp,esp
 
@@ -1059,8 +1048,7 @@ pop ebp
 ret
 body ENDP
 
-; 왼팔출력 프로시저
-leftarm PROC
+leftarm PROC ; wrong count 3
 push ebp
 mov ebp,esp
 
@@ -1117,8 +1105,7 @@ pop ebp
 ret
 leftarm ENDP
 
-; 오른팔출력 프로시저
-rightarm PROC
+rightarm PROC ; wrong count 4
 push ebp
 mov ebp,esp
 
@@ -1175,8 +1162,7 @@ pop ebp
 ret
 rightarm ENDP
 
-; 왼다리출력 프로시저
-leftleg PROC
+leftleg PROC ; wrong count 5
 push ebp
 mov ebp,esp
 
@@ -1233,8 +1219,7 @@ pop ebp
 ret
 leftleg ENDP
 
-; 오른다리출력 프로시저
-rightleg PROC
+rightleg PROC ; wrong count 6
 push ebp
 mov ebp,esp
 
@@ -1291,8 +1276,7 @@ pop ebp
 ret
 rightleg ENDP
 
-; Dead 프로시저
-Dead PROC
+Dead PROC ; User dead motion
 push ebp
 mov ebp,esp
 
@@ -1455,8 +1439,7 @@ pop ebp
 ret
 Dead ENDP
 
-; 승리출력 프로시저
-victory PROC
+victory PROC ; When User win
 push ebp
 mov ebp,esp
 
@@ -1511,12 +1494,11 @@ pop ebp
 ret
 victory ENDP
 
-; 행맨출력 프로시저
-PRINT_Hangman PROC
+PRINT_Hangman PROC ; depends on comparing life
 push ebp
 mov ebp,esp
 
-   mov eax, life ;목숨 개수를 eax에 저장
+   mov eax, life 
    cmp eax, 6
    jz Life6
    cmp eax, 5
@@ -1532,44 +1514,43 @@ mov ebp,esp
    cmp eax, 0
    jz Life0
 
-Life6:            ;목숨이 6개 일때
+Life6:            
    call stick
    Jmp exit1
 
-Life5:            ;목숨이 5개 일때
+Life5:            
    call head
    Jmp exit1
 
-Life4:            ;목숨이 4개 일때
+Life4:            
    call body
    Jmp exit1
 
-Life3:            ;목숨이 3개 일때
+Life3:            
    call leftarm
    Jmp exit1
 
-Life2:            ;목숨이 2개 일때
+Life2:            
    call rightarm
    Jmp exit1
 
-Life1:            ;목숨이 1개 일때
+Life1:           
    call leftleg
    Jmp exit1
 
-Life0:			; 목숨이 0개 일때
-      call rightleg
-      invoke sleep, 100h
-      call Dead
-      Jmp exit1
+Life0:			
+   call rightleg
+   invoke sleep, 100h
+   call Dead
+   Jmp exit1
 
 exit1:
 
 pop ebp
 ret
 PRINT_Hangman ENDP
-; 행맨출력 프로시저 종료
 
-INIT_HANGMAN PROC
+INIT_HANGMAN PROC ; init HangMan cause reply
 push ebp
 mov ebp, esp
 
@@ -1600,64 +1581,50 @@ L3:
    inc esi
    loop L3
     
-   mov Input_Alpha, 0          ; 입력한 알파벳
-   mov Match_Alpha, 0          ; 매치되는 알파벳 
-   mov Replay, 0              ; replay 변수 (아직 미구현)
-   mov tempebx, 0             ; ebx 임시저장소 
+   mov Input_Alpha, 0          
+   mov Match_Alpha, 0          
+   mov Replay, 0             
+   mov tempebx, 0             
 
 pop ebp
 ret
 INIT_HANGMAN ENDP
 
-Run_HangMan PROC
-; 함수 프롤로그
+Run_HangMan PROC ;HangMan Start
 push ebp
 mov ebp, esp
 
    call INIT_HANGMAN
+   mWrite < "                    Running_Hangman~~                                                ",0ah>
+   invoke Sleep,750h
+
    ;console size set
    invoke GetStdHandle, STD_OUTPUT_HANDLE
    mov outHandle,eax
    invoke SetConsoleWindowInfo,outHandle,TRUE,ADDR windowRect2
-   mWrite < "                    Running_Hangman~~                                                ",0ah>
-   invoke Sleep,750h
    call clrscr
 
 Hangman:
-   mov Replay, 0 ;재시작 했을 때를 고려해서 재시작변수를 초기화함
-   call Randomize ; 프로시저 시작 시드 값 초기화
+   call Randomize ; init Seed for File I/O
 
-   ; 읽어올 단어장 파일 랜덤으로 고르기
-   mov Random_Parameter, 5 ; Set_Random_Value를 위한 인자값 설정 1 ~ 5
+   ; choose Random File 
+   mov Random_Parameter, 5 ; range of 1 ~ 5
    call Set_Random_Value
-   
-   ;call DumpRegs    ; 체크 용
-   ; 조건문 (파일 고르기) 
    mov Choose_file_param, eax 
-   call Choose_File
+   call Choose_File 
+ 
+   call Choose_Word ; choose words in reading file
+
+   call PRINT_UNDERBAR ; show underbar
+   call PRINT_WRONG_ALPHA ; show init wrong alpha
+   call crlf
+   call PRINT_LIFE ; show init life 
+   call INPUT ; user input
    
-   ; 고른 파일에서 단어 고르기
-   call Choose_Word
-   
-   ; 단어의 길이만큼 언더바 출력
-   call PRINT_UNDERBAR
-   
-   ; 틀린 알파벳 현황 출력(edx~>readstring한 값을 인자로 받은 뒤부터 실행가능해서 함수로 호출하면 오류뜸)
-   call PRINT_WRONG_ALPHA
-   ;mwrite <"Wrong Alphabet: ",0>
-   call crlf;
-   
-   ; 남은목숨 현황 출력 
-   call PRINT_LIFE
-   
-   ; 입력 시작
-   call INPUT
-   
-   ; 위에서 열였던 파일 닫기
-   mov eax, handler
+   ; File I/O close
+   mov eax, handler 
    call CloseFile
 
-; 함수 에필로그
 pop ebp
 ret
 Run_HangMan ENDP
@@ -1674,16 +1641,16 @@ mov ebp, esp
    
    mWrite < "            Running_MOCK - JJI - PPA~~",0ah>
    invoke Sleep,750h
-   call Randomize ; Seed set
+   call Randomize     ; Seed set
 
    mov winner_flag, 2 ; set start flag
-   mov ad_count, 0 ; init ad_count
+   mov ad_count, 0    ; init ad_count
 
-MSP_main:   ; 이곳으로 다시 돌아와야 함.
+MSP_main:   
    call clrscr
    mov eax, 3 
-   call RandomRange  ; Generating Random 3numbers
-   inc eax           ; Start range set 1
+   call RandomRange   ; Generating Random 3numbers
+   inc eax            ; Start range set 1
    mov randVal,eax
 
    call clrscr
@@ -1692,10 +1659,10 @@ MSP_main:   ; 이곳으로 다시 돌아와야 함.
    call ReadDec
    mov choice, eax
    
-   cmp eax, randVal  ; comparing values 
+   cmp eax, randVal   ; comparing values 
    jg MSP_win 
    jl MSP_lose 
-   inc ad_count     ; 공방 횟수 카운트
+   inc ad_count       ; attack/defend count 
    jmp MSP_draw
    loop MSP_main
 ;==========================================================================
@@ -1704,10 +1671,10 @@ MSP_win:
    mov eax, randVal ; randVal=1
    sub eax, choice  ; choice=3
    cmp eax, -2 
-   je MSP_lose         ; if true -> lose
+   je MSP_lose      ; if true -> lose
    
-   mWrite <"Player Win! '3'",0ah>
-   mWrite <"Your turn to Attack!! '3'",0ah>
+   mWrite <"Player Win! ('3')",0ah>
+   mWrite <"Your turn to Attack!! r(*t*)/",0ah>
  
    mov winner_flag, 1 ; set the flag when player win
 
@@ -1762,8 +1729,8 @@ MSP_lose:
 
    call crlf
    
-   mWrite <"Computer Win! '3'",0ah>
-   mWrite <"Your turn to defend. '3'",0ah>
+   mWrite <"Computer Win! ('3')",0ah>
+   mWrite <"Your turn to defend. <(k-k)>",0ah>
  
    mov winner_flag, 0 ; set the flag when computer win
 
@@ -1856,14 +1823,12 @@ pop ebp
 ret
 Run_MSP ENDP
 ;==========================================================================
-
-;무승부인 시점에 확인
-CHECK_WINNER PROC
+CHECK_WINNER PROC ; Check When result is draw
 push ebp
 mov ebp, esp
 
     cmp winner_flag, 2
-    je MSP_RE_game ;MSP_main
+    je MSP_RE_game ; go back MSP_main
 
     cmp winner_flag, 1
     je MSP_P_win
@@ -1882,13 +1847,13 @@ MSP_P_win:  ; If Player win, print this message.
     mWrite <"#                                               #",0ah>
     mWrite <"#################################################",0ah>
 
-    pop ebp ; 스택에 쌓인 ebp를 제거하기 위함
+    pop ebp ; remove ebp in stack 
     jmp RE_TRY
 
 MSP_C_win:  ; If Player win, print this message. 
     mWrite <"#################################################",0ah>
     mWrite <"#                                               #",0ah>
-    mWrite <"                 PLAYER Lose...                  ",0ah>
+    mWrite <"                 PLAYER Lose...OTL               ",0ah>
     mWrite <"              Count : ",0>
     mov eax, ad_count
     call WriteDec
@@ -1900,8 +1865,8 @@ MSP_C_win:  ; If Player win, print this message.
    jmp RE_TRY
 
 RE_TRY:
-   mWrite < "한 게임 더 하시겠습니까?? (Y/N) : ", 0ah>
-   call ReadChar   ; Y/N 입력받음
+   mWrite < "One more game? (Y/N) : ", 0ah>
+   call ReadChar   
    mov print_made_by_input, al 
    cmp print_made_by_input, "Y"
    jz Run_MSP
@@ -1913,9 +1878,9 @@ RE_TRY:
    jz main
    jmp RE_TRY
 
-MSP_RE_game:        ; 비겼을 경우
+MSP_RE_game:        ; When result is draw
    mWrite <"draw~~",0ah>
-   mWrite <"Please One more time. '3'",0ah>
+   mWrite <"Please One more time. (-t-)",0ah>
    invoke sleep, 1000h
 
 pop ebp
