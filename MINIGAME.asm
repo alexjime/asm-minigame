@@ -20,7 +20,6 @@ ad_count DWORD 0 ; How much attack/defence give and take count.
 
 ; *** File I/O  *** 
 Random_Parameter DWORD 0 ; Random value parameter
-set_File DWORD 0         ; Random value for setting file 
 set_Word DWORD 0         ; Random value for choosing word
 FileName DWORD 0         ; File OFFSET that is have to read 
 
