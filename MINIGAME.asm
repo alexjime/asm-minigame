@@ -100,7 +100,7 @@ Print_Menu ENDP
 
 Print_Made_by PROC
 Wait_N:
-	call clrscr   ; 화면 클리어
+	call clrscr   ; clear screen
 	mWrite < "==========================================================================================================",0ah>
 	mWrite < "                                                 Made By                                                  ",0ah>
 	mWrite < "==========================================================================================================",0ah>
@@ -554,14 +554,9 @@ Choose_Word PROC ; Parameter : FileName , return : Random_Word[]
 push ebp
 mov ebp,esp
 
-	;mov eax, FIleName ; Offset 저장
 	mov File_length, LENGTHOF File_value_array 
 	call Find_File_Length
 
-	; Random choice word
-	mov eax, find_zero_length
-	call RandomRange ; return eax
-	; mov eax, find_zero_length 이거 넣으면 총 단어의 개수를 구해주고 이걸 빼면 랜덤으로 단어를 고를 수 있게 됨
 	mov ecx, word_length
 	add ecx, 2  ; *.txt's Newline is 2byte. so calculate word_length+2 at each line
 	mov edx, 0  ; 'div' use edx as Remainder. so init 0 
@@ -578,16 +573,12 @@ mov ebp,esp
 	mov ecx, word_length
 	dec ecx           ; 이유는 잘 모르겠지만 단어의 길이에서 1을 빼주고 하면 된다.
 
-L1:                           ; Random_Word 배열에 단어를 저장하는 루프
+L1:                       ; Loop(Save words in Random_Word array)
 	mov eax, [ebx]
 	mov [edx], eax
 	inc ebx
 	inc edx
 	loop L1
-
-   ;check what word is readed.
-   ;mov edx, OFFSET Random_Word
-   ;call WriteString
 
 pop ebp
 ret
@@ -635,7 +626,8 @@ mov ebp,esp
 is_exist:
 	xor edx, edx  ; set dl = 0
 	cmp dl, [Space_Word + esi] 
-	;Tip: 문자값을 비교할때는 edx레지스터를 써야한다. 꼭! 꼭! eax는 정수값 비교할 때만 쓰는 레지스터입니다.
+	;Tip: When you compare string value, use edx register
+        ;     eax register is use to compare integer value.
 	je not_exist
 	mov dl, [Space_Word + esi]
 	mov Match_Alpha, dl
