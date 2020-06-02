@@ -1,7 +1,7 @@
 # madeby
 This team project made by enviroment on Irvine32 in 2019.
 Team member is consist of Sooncheonhyang Univ 4students in Korea. 
-Our github are hungry-shark, Whitec01a, em9xdm, OZ1NG
+Our github are AlexJime, Whitec01a, em9xdm, OZ1NG
 # asm-minigame
 MINIGAME is consist of Rock-Paper-Scissors, MOKC-JJI-PPA, HangMan.
 MOCK-JJI-PPA is a play that transforms Rock-Paper-Scissors in korea.
